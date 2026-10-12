@@ -1,10 +1,737 @@
+
 <!DOCTYPE html>
-<html>
-   <head>
-      <title>My Cool Website</title>
-   </head>
-   <body>
-      <h1>Welcome to my website! ⭐️</h1>
-      <p>How was your day? 🎉</p>
-   </body>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#171721">
+<title>Macarca–Almanca | Etimoloji Quiz</title>
+<style>
+:root{
+  --bg:#171721;--panel:#252536;--card:#323248;--line:#4a4a62;
+  --gold:#f1c40f;--green:#27ae60;--red:#e74c3c;
+  --cyan:#00ddb5;--white:#f5f5fa;--muted:#b9b9cc;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;padding:16px;min-height:100vh;
+  background:radial-gradient(ellipse at top,#292941 0,#171721 60%);
+  color:var(--white);font:16px/1.6 system-ui,"Segoe UI",sans-serif;
+}
+main{max-width:900px;margin:0 auto}
+.panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:20px;padding:clamp(16px,4vw,32px);
+  box-shadow:0 18px 50px #0003;
+}
+h1{color:var(--gold);text-align:center;font-size:clamp(1.5rem,4vw,2.2rem);line-height:1.25;margin:0 0 8px}
+h2{line-height:1.3}
+.sub{text-align:center;color:var(--muted);margin:0 0 24px}
+label{display:block;color:var(--muted);font-size:.9rem;margin-bottom:6px}
+select,button{font:inherit}
+select{
+  width:100%;min-width:0;background:var(--card);color:var(--white);
+  border:1px solid var(--line);border-radius:10px;padding:12px;
+}
+.toolbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0}
+button{
+  border:1px solid var(--line);border-radius:12px;padding:13px 16px;
+  cursor:pointer;background:#41415a;color:white;min-height:46px;
+  transition:background .15s,border-color .15s;
+}
+button:hover:not(:disabled){background:#555575}
+button:focus-visible,select:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+button:disabled{cursor:default;opacity:.95}
+.primary{background:var(--gold);color:#171721;border-color:var(--gold);font-weight:800}
+.primary:hover:not(:disabled){background:#ffdc45}
+.actions{display:flex;justify-content:center;gap:10px;margin-top:18px;flex-wrap:wrap}
+.actions button{min-width:130px}
+.stats{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--cyan);font-weight:700;margin-bottom:10px}
+progress{width:100%;height:10px;accent-color:var(--cyan);margin-bottom:14px}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.tag{display:inline-block;background:#41415a;border-radius:999px;padding:4px 10px;font-size:.82rem;color:#e1e1f1}
+#question{font-size:clamp(1.3rem,4vw,1.8rem);font-weight:800;text-align:center;margin:24px 0 8px;overflow-wrap:anywhere}
+#prompt{text-align:center;color:var(--muted);margin:0 0 20px}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.option{text-align:left;display:flex;align-items:center;gap:10px;overflow-wrap:anywhere}
+.option .letter{
+  flex:0 0 30px;height:30px;border-radius:9px;background:#252536;
+  display:grid;place-items:center;font-size:.85rem;font-weight:800;
+}
+.option.correct{background:#17683c;border-color:var(--green)}
+.option.wrong{background:#7d2828;border-color:var(--red)}
+#message{font-weight:800;margin-top:14px}
+.explanation{
+  background:#1c1c29;border-left:4px solid var(--cyan);
+  padding:16px;border-radius:8px;margin-top:14px;overflow-wrap:anywhere;
+}
+.explanation h3{margin:0 0 8px}
+.explanation p{margin:8px 0}
+a{color:var(--cyan);text-underline-offset:3px}
+#result{text-align:center}
+.result-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:22px 0}
+.result-card{background:#1c1c29;border:1px solid var(--line);border-radius:12px;padding:16px}
+.result-value{font-size:clamp(1.4rem,4vw,2rem);font-weight:900;color:var(--cyan)}
+.review{text-align:left;margin-top:22px}
+.review details{background:#1c1c29;border-radius:12px;padding:14px;margin:10px 0}
+.review summary{cursor:pointer;font-weight:800}
+.review li{margin:12px 0;overflow-wrap:anywhere}
+.muted{color:var(--muted)}
+[hidden]{display:none!important}
+footer{text-align:center;font-size:.85rem;color:var(--muted);margin:18px auto 0;max-width:850px}
+@media(max-width:620px){
+  body{padding:8px}
+  .panel{border-radius:15px}
+  .toolbar,.options{grid-template-columns:1fr}
+  .result-grid{grid-template-columns:1fr}
+  .actions{display:grid;grid-template-columns:1fr}
+  .actions button{width:100%}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main>
+<section class="panel">
+<header>
+<h1>Macarca–Almanca Kelime Avı</h1>
+<p class="sub">Etimoloji, tarihsel dil teması ve ses değişimleri</p>
+</header>
+
+<section id="welcome">
+<div class="toolbar">
+  <div>
+    <label for="category">Soru grubu</label>
+    <select id="category">
+      <option value="all">Tüm gruplar</option>
+    </select>
+  </div>
+  <div>
+    <label for="count">Soru sayısı</label>
+    <select id="count">
+      <option value="10">10 soru</option>
+      <option value="20">20 soru</option>
+      <option value="all" selected>Tüm sorular</option>
+    </select>
+  </div>
+  <div>
+    <label for="order">Soru sırası</label>
+    <select id="order">
+      <option value="random" selected>Karışık</option>
+      <option value="original">Kaynak sırası</option>
+    </select>
+  </div>
+</div>
+<p id="question-count" class="muted"></p>
+<p class="muted">Her doğru cevap 10 puan değerindedir. Açıklamaları ve kaynak notlarını okuyarak etimolojik iddiaları eleştirel biçimde değerlendirin.</p>
+<div class="actions">
+  <button id="start" class="primary">Quizi Başlat</button>
+</div>
+</section>
+
+<section id="game" hidden>
+<div class="stats">
+  <span id="score">Skor: 0</span>
+  <span id="counter">1 / 10</span>
+  <span id="timer">Süre: 00:00</span>
+</div>
+<progress id="progress" value="0" max="100" aria-label="Quiz ilerlemesi"></progress>
+<div class="tags">
+  <span id="category-tag" class="tag"></span>
+  <span id="layer-tag" class="tag"></span>
+</div>
+<div id="word" class="tag" hidden></div>
+<h2 id="question"></h2>
+<p id="prompt">En doğru yanıtı seçin.</p>
+<div id="options" class="options"></div>
+<div id="feedback" class="explanation" hidden aria-live="polite"></div>
+<div class="actions">
+  <button id="skip">Soruyu Atla</button>
+  <button id="next" class="primary" hidden>Sonraki Soru</button>
+  <button id="finish">Quizi Bitir</button>
+</div>
+</section>
+
+<section id="result" hidden>
+<h2>Quiz Sonucu</h2>
+<p id="result-comment"></p>
+<div class="result-grid">
+  <div class="result-card"><div class="muted">Puan</div><div id="final-score" class="result-value">0</div></div>
+  <div class="result-card"><div class="muted">Başarı</div><div id="accuracy" class="result-value">0%</div></div>
+  <div class="result-card"><div class="muted">Süre</div><div id="final-time" class="result-value">00:00</div></div>
+</div>
+<p id="result-detail" class="muted"></p>
+<div id="review" class="review"></div>
+<div class="actions">
+  <button id="retry" class="primary">Yeniden Oyna</button>
+  <button id="home">Ayarları Değiştir</button>
+</div>
+</section>
+</section>
+<footer>
+Etimolojik benzerlik tek başına ödünçleme kanıtı değildir. Kaynak biçim, ses denklikleri, tarihsel bağlam ve belirsizlik derecesi birlikte değerlendirilmelidir.
+</footer>
+</main>
+
+<script>
+"use strict";
+
+/*
+ * Önceki akademik quizden aktarılan soru kayıtları.
+ * Etimolojik iddialar, birincil kaynak kontrolü yapılmadan kesin gerçek
+ * olarak kabul edilmemelidir. Açıklamalar bu nedenle ihtiyatlı yazılmıştır.
+ */
+const SOURCE_URL = "https://uesz.nytud.hu/index.html";
+
+const quizData = [
+{
+word:"gyűrű",meaning:"yüzük",category:"Tarih öncesi temas",layer:"Batı Eski Türkçe ile ilişkilendirilen katman",
+question:"Macarca gyűrű (yüzük) sözcüğünün kökenini değerlendirirken en bilimsel yaklaşım hangisidir?",
+options:[
+"Önerilen Türkçe bağlantıyı tarihsel ses denklikleri ve etimoloji sözlüğüyle kontrol etmek",
+"Anlamı benziyor diye sözcüğü kesinlikle Osmanlı Türkçesinden saymak",
+"Macarcadaki her uzun ünlüyü Almanca etkisine bağlamak",
+"Tek bir modern sözcük benzerliğini yeterli kanıt saymak"
+],
+answer:0,
+explanation:"Bir sözcüğün tarihsel kökeni yalnızca bugünkü anlamına veya biçim benzerliğine dayanılarak belirlenemez. Tarihlendirme, ses karşılıkları, eski biçimler ve uzman etimoloji sözlüklerindeki değerlendirme incelenmelidir. Bu soru bir kaynak-eleştiri alıştırmasıdır; seçenek tek başına etimolojik kanıt değildir."
+},
+{
+word:"búza",meaning:"buğday",category:"Tarih öncesi temas",layer:"Tarım söz varlığı",
+question:"Macarca búza (buğday) sözcüğünün Türk dilleriyle ilişkilendirilmesi araştırılırken hangi kanıt daha değerlidir?",
+options:[
+"Yalnızca iki sözcüğün tarımla ilgili olması",
+"Eski biçimler, düzenli ses karşılıkları ve temas kronolojisinin birlikte gösterilmesi",
+"Kelimenin modern Türkçede bulunmaması",
+"İki dilin aynı alfabeyi kullanması"
+],
+answer:1,
+explanation:"Tarihsel ödünçleme araştırması, biçimsel benzerliği düzenli ses karşılıkları ve kronolojiyle sınamalıdır. Tarım terimleri temas tarihini araştırmak için yararlıdır, fakat anlamsal alan tek başına kaynak dili kanıtlamaz."
+},
+{
+word:"ökör",meaning:"öküz",category:"Tarih öncesi temas",layer:"Hayvancılık söz varlığı",
+question:"Macarca ökör sözcüğünün tarihsel kökenini sınamak için hangisi gerekir?",
+options:[
+"Modern Türkçedeki öküz sözcüğünü tek başına yeterli saymak",
+"Yalnızca sözcüğün hayvan adı olmasına bakmak",
+"Eski Türkçe biçimleri, Macarcadaki tarihsel biçimleri ve ses değişimlerini karşılaştırmak",
+"Macarca ile Almancanın aynı dil ailesinde olduğunu varsaymak"
+],
+answer:2,
+explanation:"Hayvancılık terimleri tarihsel temas çalışmalarında önemli olabilir. Ancak belirli bir sözcüğün kaynağını saptamak için eski tanıklıklar ve düzenli ses karşılıkları incelenmelidir. Modern biçimler tarihsel gelişimi tek başına göstermez."
+},
+{
+word:"kuplung",meaning:"debriyaj",category:"Almanca teması",layer:"Teknik ödünçleme",
+question:"Macarca kuplung ile Almanca Kupplung arasındaki ilişkiyi değerlendirirken en güçlü başlangıç varsayımı hangisidir?",
+options:[
+"Kesinlikle Eski Türkçeden miras kalmıştır",
+"Benzerlik tesadüf olmak zorundadır",
+"Macarcada sözcüğün Almanca ile ilişkisi olamayacağı kesindir",
+"Biçim ve anlam yakınlığı doğrudan ödünçleme olasılığını düşündürür; sözlük kaydıyla doğrulanmalıdır"
+],
+answer:3,
+explanation:"Kuplung/Kupplung biçim ve anlam bakımından yakın bir çifttir ve Almanca etkisi olasılığını güçlü biçimde düşündürür. Yine de ödünçleme yönü, tarih ve kullanım alanı güvenilir Macarca etimoloji sözlüğünden kontrol edilmelidir."
+},
+{
+word:"Almanca Kupplung",meaning:"bağlantı; debriyaj",category:"Almanca teması",layer:"Teknik terminoloji",
+question:"İki dildeki sözcükler arasındaki yakın biçimsel benzerlik neyi kanıtlar?",
+options:[
+"Tek başına kesin kökeni ve ödünçleme tarihini",
+"Bir ilişki olasılığını; tarihsel kaynaklarla ayrıca sınanması gerekir",
+"Her iki sözcüğün de Türkçe kökenli olduğunu",
+"İki dilin aynı dil ailesinden olduğunu"
+],
+answer:1,
+explanation:"Biçim ve anlam yakınlığı araştırma hipotezi oluşturur; tek başına etimolojik ispat değildir. Sözcüğün ilk tanıklıkları, tarihsel temas koşulları ve güvenilir sözlüklerin verdiği kaynak biçim incelenmelidir."
+},
+{
+word:"Etimoloji",meaning:"sözcük kökeni bilimi",category:"Eleştirel etimoloji",layer:"Yöntem",
+question:"Bir etimolojik iddiayı bilimsel olarak güçlü kılan özellik hangisidir?",
+options:[
+"İddianın çok sayıda sosyal medya paylaşımında bulunması",
+"Kaynakların belirtilmemesi",
+"Düzenli ses karşılıkları, tarihsel tanıklıklar ve açıkça belirtilmiş belirsizlikler",
+"Yalnızca güncel yazılışların karşılaştırılması"
+],
+answer:2,
+explanation:"Bilimsel etimoloji tarihsel biçimleri, ses gelişmelerini, anlam değişimini ve temas bağlamını birlikte değerlendirir. Kaynaklar ve belirsizlikler açıkça belirtilmelidir. Bir etimoloji sözlüğünün önerisi de kanıt türleri açısından okunmalıdır."
+},
+{
+word:"Kronoloji",meaning:"olayların zaman sıralaması",category:"Eleştirel etimoloji",layer:"Tarihsel dilbilim",
+question:"Bir sözcüğün belirli bir dilden ödünçlendiğini ileri sürerken kronoloji neden önemlidir?",
+options:[
+"Ödünçlemenin önerilen temas döneminde mümkün olup olmadığını sınar",
+"Her zaman kaynak dili tek başına belirler",
+"Ses değişimlerini gereksiz kılar",
+"Modern yazımın eski dönemlerde de aynı olduğunu gösterir"
+],
+answer:0,
+explanation:"Kronoloji, önerilen kaynak ve alıcı toplulukların temas etmiş olmasını ve sözcüğün bilinen tarihinin bu öneriyle uyuşmasını sınar. Ancak kronolojik uygunluk tek başına yeterli değildir; sesbilimsel ve sözlüksel kanıt da gerekir."
+},
+{
+word:"Batı Eski Türkçe",meaning:"Tarihsel Türk dili katmanı",category:"Tarih öncesi temas",layer:"Dil teması",
+question:"Macarca ile erken Türk dilleri arasındaki tarihsel temas araştırmasında hangi yaklaşım uygundur?",
+options:[
+"Bütün Türkçe alıntıları tek bir döneme yerleştirmek",
+"Her sözcüğün doğrudan modern Türkiye Türkçesinden geldiğini varsaymak",
+"Temas katmanlarını ve olası kaynak dilleri birbirinden ayırmadan incelemek",
+"Farklı dönemleri, kaynak biçimleri ve ses uyarlamalarını ayrı ayrı değerlendirmek"
+],
+answer:3,
+explanation:"Macarcadaki Türkçe kökenli olduğu düşünülen sözcükler farklı tarihsel temas katmanlarıyla ilişkilendirilebilir. Her sözcük için tek bir genel açıklama kullanmak yerine kaynak biçim, temas dönemi ve ses uyarlaması ayrı ayrı araştırılmalıdır."
+},
+{
+word:"Ödünçleme",meaning:"bir dilden başka bir dile unsur aktarımı",category:"Eleştirel etimoloji",layer:"Dil teması",
+question:"Bir ödünç sözcük alıcı dile geçtiğinde hangi değişim yaşanabilir?",
+options:[
+"Yalnızca anlamı değişebilir; ses biçimi asla değişmez",
+"Alıcı dilin ses ve biçim örüntülerine uyarlanabilir",
+"Mutlaka tüm eklerini ve telaffuzunu korur",
+"Kaynak dilin dilbilgisi bütünüyle aktarılır"
+],
+answer:1,
+explanation:"Ödünçlenen sözcükler alıcı dilin ses dizgesine, vurgu örüntülerine ve bazen biçimbilimsel kurallarına uyarlanabilir. Bu uyarlamalar ödünçlemenin yönünü ve dönemini araştırmada yardımcı olabilir; fakat tek başlarına kesin kanıt değildir."
+},
+{
+word:"Ses denklikleri",meaning:"düzenli ses karşılıkları",category:"Fonoloji",layer:"Karşılaştırmalı yöntem",
+question:"Tarihsel dilbilimde düzenli ses denklikleri neden önemlidir?",
+options:[
+"Her benzerliği ödünçleme saymayı sağlar",
+"Anlam araştırmasını gereksiz kılar",
+"Biçim benzerliklerinin tarihsel ve sistematik olup olmadığını sınamaya yardımcı olur",
+"Kelimenin ilk yazılış tarihini her zaman kesinleştirir"
+],
+answer:2,
+explanation:"Ses denklikleri, karşılaştırılan biçimler arasındaki ilişkinin düzenli olup olmadığını değerlendirmeye yardımcı olur. Ödünçleme araştırmasında bu karşılıklar, bilinen ses uyarlamaları ve tarihsel bağlamla birlikte ele alınmalıdır."
+},
+{
+word:"Yakın kaynak",meaning:"bir sözcüğün doğrudan alındığı dil veya biçim",category:"Eleştirel etimoloji",layer:"Kaynak dili",
+question:"Yakın kaynak ile nihai köken arasındaki fark nedir?",
+options:[
+"Yakın kaynak sözcüğün doğrudan alındığı dil olabilir; nihai köken daha eski bir kaynağa uzanabilir",
+"İki terim her zaman aynı şeyi ifade eder",
+"Nihai köken daima modern bir dildir",
+"Yakın kaynak yalnızca sözcüğün bugünkü anlamıdır"
+],
+answer:0,
+explanation:"Bir sözcük alıcı dile bir aracı dil üzerinden ulaşmış olabilir. Bu durumda doğrudan kaynak ile sözcüğün daha eski kökeni ayrılır. Etimolojik açıklama, kanıtların desteklediği her aşamayı ve belirsizliği belirtmelidir."
+},
+{
+word:"Anlam değişimi",meaning:"bir sözcüğün anlamının zamanla değişmesi",category:"Fonoloji",layer:"Tarihsel anlambilim",
+question:"Anlam benzerliği etimolojik kökeni belirlemek için neden yeterli değildir?",
+options:[
+"Çünkü sözcüklerin hiçbir zaman anlamı olmaz",
+"Çünkü yalnızca ünlüler önemlidir",
+"Çünkü anlam tarihsel dilbilimde kullanılmaz",
+"Benzer anlamlar farklı kökenli sözcüklerde bulunabilir; biçim ve tarih de incelenmelidir"
+],
+answer:3,
+explanation:"Dillerde benzer kavramlar için birbirinden bağımsız sözcükler bulunabilir. Köken araştırması, anlamsal yakınlığı tarihsel biçimler, ses karşılıkları, tanıklıklar ve temas koşullarıyla birlikte değerlendirmelidir."
+},
+{
+word:"Ünlü uyumu",meaning:"ünlülerin sözcük içinde belirli özelliklere göre uyum göstermesi",category:"Fonoloji",layer:"Macarca sesbilgisi",
+question:"Macarca ünlü uyumu hakkında hangi ifade en uygundur?",
+options:[
+"Her sözcükte tüm ünlüler aynı olmak zorundadır",
+"Macarcada ünlü uyumu yoktur",
+"Ünlü uyumu, özellikle ek seçimini etkileyen önemli bir sesbilgisel örüntüdür; istisnalar da vardır",
+"Ünlü uyumu yalnızca Almanca ödünç sözcüklerde görülür"
+],
+answer:2,
+explanation:"Macarcada ünlü uyumu ek biçimlerinin seçimini etkileyen önemli bir özelliktir. Ancak örüntü mutlak değildir; ödünç sözcükler, bileşikler ve belirli ekler farklı davranışlar gösterebilir. Tek bir sözcükten tarihsel köken sonucu çıkarılmamalıdır."
+},
+{
+word:"Ottoman Turkish",meaning:"Osmanlı Türkçesi",category:"Tarihsel temas",layer:"Daha geç temas katmanı",
+question:"Macarca bir sözcüğün Osmanlı döneminden geldiği iddiası nasıl sınanmalıdır?",
+options:[
+"Yalnızca sözcüğün yiyecek veya eşya adı olmasına bakarak",
+"İlk tanıklıkları, olası aracı dilleri ve döneme ait tarihsel kaynakları inceleyerek",
+"Modern Türkiye Türkçesinde karşılığı olup olmadığına bakarak",
+"Macarca yazılışının Latin harfleriyle olmasına dayanarak"
+],
+answer:1,
+explanation:"Belirli bir tarihsel döneme atfedilen ödünçlemeler için yazılı tanıklıklar, temas tarihi ve aracı dil olasılıkları önemlidir. Sözcüğün bir kültürel alana ait olması, tek başına hangi dönemden veya dilden geldiğini göstermez."
+},
+{
+word:"Etimoloji sözlüğü",meaning:"sözcüklerin tarihsel kökenlerini açıklayan kaynak",category:"Eleştirel etimoloji",layer:"Kaynak değerlendirme",
+question:"Bir etimoloji sözlüğündeki soru işareti veya ihtiyatlı ifade nasıl yorumlanmalıdır?",
+options:[
+"Önerinin kesinlikle kanıtlandığı şeklinde",
+"Kaydın otomatik olarak yanlış olduğu şeklinde",
+"İfadenin önemsiz olduğu şeklinde",
+"Yazarın köken önerisinin belirsizliğine veya kanıt sınırlılığına işaret edebileceği şeklinde"
+],
+answer:3,
+explanation:"Etimoloji sözlüklerinde kullanılan ihtiyatlı ifadeler, kaynak biçimin veya tarihsel ilişkinin kesin olmadığını gösterebilir. Akademik bir quiz bu belirsizliği ortadan kaldırmamalı; öneri, kanıt ve varsayımı birbirinden ayırmalıdır."
+},
+{
+word:"İlk tanıklık",meaning:"bir sözcüğün bilinen en eski belgeli kullanımı",category:"Eleştirel etimoloji",layer:"Belgelendirme",
+question:"Bir sözcüğün ilk yazılı tanıklığı neyi gösterir?",
+options:[
+"En geç o tarihte belgelenmiş olduğunu; gerçek ortaya çıkış tarihi daha eski olabilir",
+"Mutlaka o tarihte icat edildiğini",
+"Kaynak dilinin kesin olarak bilindiğini",
+"Önceki sözlü kullanımın bulunmadığını"
+],
+answer:0,
+explanation:"İlk yazılı tanıklık, sözcüğün belgelerde görüldüğü en erken bilinen noktayı verir. Sözcük yazıya geçirilmeden önce konuşma dilinde kullanılmış olabilir. Bu nedenle ilk tanıklık, sözcüğün icat edildiği tarih olarak yorumlanmamalıdır."
+},
+{
+word:"Bileşik sözcük",meaning:"iki veya daha fazla unsurun birleşmesiyle oluşan sözcük",category:"Fonoloji",layer:"Biçimbilim",
+question:"Bir sözcüğün bileşik olması, köken incelemesini nasıl etkiler?",
+options:[
+"Her unsurun mutlaka aynı dilden gelmesini gerektirir",
+"Etimoloji araştırmasını gereksiz kılar",
+"Her bileşenin geçmişi ve birleşme tarihi ayrı ayrı incelenebilir",
+"Ses değişimlerinin gerçekleşmediğini gösterir"
+],
+answer:2,
+explanation:"Bileşiklerde bileşenler farklı kökenlerden gelebilir ve birleşme farklı bir dönemde gerçekleşmiş olabilir. Etimolojik inceleme, bileşenlerin tarihini ve bileşiğin oluşumunu ayrı ayrı ele almalıdır."
+},
+{
+word:"Ödünçleme yönü",meaning:"bir unsurun hangi dilden hangi dile geçtiği",category:"Eleştirel etimoloji",layer:"Tarihsel çıkarım",
+question:"İki dilde benzer sözcükler bulunması ödünçleme yönünü neden tek başına belirlemez?",
+options:[
+"Çünkü bütün diller aynı sözcükleri kullanır",
+"Çünkü biçimsel benzerlik hiçbir zaman anlamlı değildir",
+"Çünkü yazım her zaman değişmeden kalır",
+"Ortak kaynak, aracı dil veya karşılıklı temas gibi başka açıklamalar da bulunabilir"
+],
+answer:3,
+explanation:"Benzer sözcükler ortak bir eski kaynaktan, aracı dilden, doğrudan ödünçlemeden veya tesadüften kaynaklanabilir. Ödünçleme yönü için tarih, ses uyarlaması, coğrafi temas ve erken tanıklıklar değerlendirilmelidir."
+},
+{
+word:"Kültürel söz varlığı",meaning:"belirli kültürel alanlarla ilişkili sözcükler",category:"Tarihsel temas",layer:"Sözlüksel alan",
+question:"Yiyecek, tarım veya yönetim terimlerinin ödünçleme araştırmasındaki rolü nedir?",
+options:[
+"Her birinin kaynağını otomatik olarak belirler",
+"Tarihsel temas alanları için ipucu verir, ancak her sözcük ayrıca incelenmelidir",
+"Ses karşılıklarını incelemeyi gereksiz kılar",
+"Sözcüklerin yalnızca modern dönemde oluştuğunu kanıtlar"
+],
+answer:1,
+explanation:"Sözlüksel alanlar, topluluklar arasındaki temasın hangi yaşam alanlarında yoğunlaşmış olabileceğini anlamaya yardımcı olur. Ancak aynı alandaki her sözcüğün aynı kaynaktan veya aynı dönemden geldiği varsayılamaz."
+},
+{
+word:"Kesinlik derecesi",meaning:"bir iddianın kanıtlarla ne ölçüde desteklendiği",category:"Eleştirel etimoloji",layer:"Bilimsel yöntem",
+question:"Akademik bir etimoloji quizinde belirsizlik nasıl sunulmalıdır?",
+options:[
+"Her öneriyi kesin gerçek olarak yazarak",
+"Yalnızca en ilginç açıklamayı seçerek",
+"Kanıtın gücünü, alternatifleri ve kaynakların ihtiyatını açıkça belirterek",
+"Kaynak bağlantılarını kaldırarak"
+],
+answer:2,
+explanation:"Akademik anlatım, kanıtlanmış olgularla olası açıklamaları ayırır. Güvenilir kaynaklar arasında görüş ayrılığı varsa bu belirtilmelidir. Belirsizliği ifade etmek bilimsel zayıflık değil, kanıta uygun raporlama biçimidir."
+},
+{
+word:"Dil ailesi",meaning:"ortak bir tarihsel atadan gelen diller topluluğu",category:"Eleştirel etimoloji",layer:"Karşılaştırmalı dilbilim",
+question:"Bir dilin başka bir dilden sözcük alması, bu iki dilin aynı dil ailesinden olduğunu gösterir mi?",
+options:[
+"Evet, her ödünçleme akrabalığı kanıtlar",
+"Hayır; diller farklı ailelerden olup yoğun biçimde sözcük alışverişi yapabilir",
+"Yalnızca teknik terimlerde evet",
+"Yalnızca yazılı dillerde evet"
+],
+answer:1,
+explanation:"Dil akrabalığı düzenli temel söz varlığı karşılaştırmaları ve sistematik ses denklikleriyle araştırılır. Ödünçleme, birbirinden farklı dil ailelerine ait diller arasında da gerçekleşebilir."
+},
+{
+word:"Fonolojik uyarlama",meaning:"bir ses biçiminin başka bir dilin ses örüntülerine uyarlanması",category:"Fonoloji",layer:"Ödünçleme",
+question:"Ödünçlenen sözcüğün ses yapısının değişmesi hangi nedenle gerçekleşebilir?",
+options:[
+"Alıcı dilin ses dizgesi ve ses birleşimi kısıtlamaları nedeniyle",
+"Her zaman yazım hatası nedeniyle",
+"Kaynak dilin mutlaka ortadan kalkması nedeniyle",
+"Anlamın hiçbir zaman değişmemesi nedeniyle"
+],
+answer:0,
+explanation:"Alıcı dil, kaynak sözcükteki sesleri veya ses dizilerini kendi sesbilgisel örüntülerine uyarlayabilir. Böyle bir uyarlama tarihsel analizde ipucu sağlar, ancak bir köken önerisi düzenli karşılıklarla doğrulanmalıdır."
+},
+{
+word:"Araştırma hipotezi",meaning:"kanıtlarla sınanması gereken açıklama önerisi",category:"Eleştirel etimoloji",layer:"Bilimsel yöntem",
+question:"Bir sözcüğün Türkçe kökenli olduğu yönünde ilk benzerlik fark edildiğinde en doğru sonraki adım hangisidir?",
+options:[
+"İddiayı doğrulanmış bilgi olarak yayımlamak",
+"Yalnızca bir çevrim içi sözlükte karşılık aramak",
+"Alternatif açıklamaları göz ardı etmek",
+"Güvenilir etimoloji sözlüklerini, tarihsel biçimleri ve ses karşılıklarını karşılaştırmak"
+],
+answer:3,
+explanation:"Benzerlik bir araştırma hipotezi doğurabilir. Hipotez; güvenilir sözlükler, ilk tanıklıklar, düzenli ses denklikleri ve alternatif açıklamalarla sınanmalıdır. Kanıt yetersizse sonuç ihtiyatlı biçimde ifade edilmelidir."
+},
+{
+word:"Macarca kuplung",meaning:"debriyaj",category:"Almanca teması",layer:"Modern teknik söz varlığı",
+question:"Macarca kuplung örneğinde kaynak değerlendirmesi için en uygun başvuru türü hangisidir?",
+options:[
+"Yalnızca otomobil reklamları",
+"Macarca etimoloji sözlüğü ve gerekirse tarihsel Almanca sözlük kayıtları",
+"Yalnızca kullanıcı yorumları",
+"Yalnızca sözcüğün bugünkü telaffuzu"
+],
+answer:1,
+explanation:"Modern teknik sözcüklerde biçimsel karşılaştırma yararlı bir başlangıçtır. Kaynak dil ve ödünçleme tarihini kesinleştirmek için Macarca etimoloji sözlüğü, tarihsel Almanca kayıtlar ve uygun olduğunda kullanım belgeleri karşılaştırılmalıdır."
+}
+];
+
+const $ = id => document.getElementById(id);
+const shuffle = arr => {
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+};
+const unique = arr => [...new Set(arr.filter(Boolean))];
+const escapeHTML = value => String(value ?? "").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+const formatTime = seconds =>
+  String(Math.floor(seconds/60)).padStart(2,"0")+":"+
+  String(seconds%60).padStart(2,"0");
+
+let questions=[];
+let index=0;
+let score=0;
+let correctCount=0;
+let skippedCount=0;
+let seconds=0;
+let timer=null;
+let locked=false;
+let reviewItems=[];
+
+function fillCategories(){
+  const select=$("category");
+  unique(quizData.map(q=>q.category))
+    .sort((a,b)=>a.localeCompare(b,"tr"))
+    .forEach(category=>{
+      const option=document.createElement("option");
+      option.value=category;
+      option.textContent=category;
+      select.appendChild(option);
+    });
+  updateQuestionCount();
+}
+
+function updateQuestionCount(){
+  const category=$("category").value;
+  const pool=quizData.filter(q=>category==="all"||q.category===category);
+  const limit=$("count").value;
+  const total=limit==="all"?pool.length:Math.min(Number(limit),pool.length);
+  $("question-count").textContent=
+    `${pool.length} soru mevcut. Bu oturumda ${total} soru sorulacak.`;
+}
+
+function startGame(){
+  const category=$("category").value;
+  let pool=quizData.filter(q=>category==="all"||q.category===category);
+  if($("order").value==="random")pool=shuffle(pool);
+  const count=$("count").value;
+  questions=count==="all"?pool:pool.slice(0,Number(count));
+
+  if(!questions.length){
+    alert("Bu seçim için soru bulunamadı.");
+    return;
+  }
+
+  index=0;score=0;correctCount=0;skippedCount=0;
+  seconds=0;locked=false;reviewItems=[];
+  $("score").textContent="Skor: 0";
+  $("timer").textContent="Süre: 00:00";
+  $("welcome").hidden=true;
+  $("result").hidden=true;
+  $("game").hidden=false;
+
+  if(timer)clearInterval(timer);
+  timer=setInterval(()=>{
+    seconds++;
+    $("timer").textContent="Süre: "+formatTime(seconds);
+  },1000);
+  renderQuestion();
+}
+
+function renderQuestion(){
+  if(index>=questions.length){
+    showResults();
+    return;
+  }
+  locked=false;
+  const q=questions[index];
+  $("counter").textContent=`${index+1} / ${questions.length}`;
+  $("progress").max=questions.length;
+  $("progress").value=index;
+  $("category-tag").textContent=q.category;
+  $("layer-tag").textContent=q.layer;
+  $("word").textContent=q.word||"";
+  $("word").hidden=!q.word;
+  $("question").textContent=q.question;
+  $("prompt").textContent="En doğru yanıtı seçin.";
+  $("feedback").hidden=true;
+  $("feedback").replaceChildren();
+  $("next").hidden=true;
+  $("skip").hidden=false;
+
+  const options=$("options");
+  options.replaceChildren();
+  const choices=shuffle(q.options.map((text,originalIndex)=>({
+    text,originalIndex
+  })));
+
+  choices.forEach((choice,displayIndex)=>{
+    const button=document.createElement("button");
+    button.type="button";
+    button.className="option";
+    const letter=document.createElement("span");
+    letter.className="letter";
+    letter.textContent=String.fromCharCode(65+displayIndex);
+    const text=document.createElement("span");
+    text.textContent=choice.text;
+    button.append(letter,text);
+    button.addEventListener("click",()=>checkAnswer(choice.originalIndex,button));
+    options.appendChild(button);
+  });
+}
+
+function addText(parent,tag,text,className){
+  const element=document.createElement(tag);
+  if(className)element.className=className;
+  element.textContent=text;
+  parent.appendChild(element);
+  return element;
+}
+
+function checkAnswer(choice,button){
+  if(locked)return;
+  locked=true;
+
+  const q=questions[index];
+  const correct=choice===q.answer;
+  if(correct){
+    score+=10;
+    correctCount++;
+  }else{
+    reviewItems.push({...q,reason:"Yanlış cevap"});
+  }
+
+  $("score").textContent="Skor: "+score;
+  [...$("options").children].forEach((option,displayIndex)=>{
+    option.disabled=true;
+    const originalText=option.lastElementChild.textContent;
+    if(originalText===q.options[q.answer])option.classList.add("correct");
+  });
+
+  if(!correct)button.classList.add("wrong");
+
+  const feedback=$("feedback");
+  feedback.replaceChildren();
+  feedback.hidden=false;
+  addText(feedback,"h3",correct?"✓ Doğru cevap!":"✗ Yanlış cevap.");
+  addText(feedback,"p","Doğru yanıt: "+q.options[q.answer]);
+  addText(feedback,"p",q.explanation);
+
+  const source=addText(feedback,"p","Kaynak: ");
+  const link=document.createElement("a");
+  link.href="https://uesz.nytud.hu/index.html";
+  link.target="_blank";
+  link.rel="noopener noreferrer";
+  link.textContent="Új magyar etimológiai szótár (UESz.)";
+  source.appendChild(link);
+
+  addText(feedback,"p",
+    "Not: Bu quizdeki açıklamalar öğretici çerçeve sunar. Sözcük bazındaki etimolojik iddialar, sözlük maddesi ve ilgili tarihsel kaynaklar üzerinden ayrıca doğrulanmalıdır.",
+    "muted");
+
+  $("skip").hidden=true;
+  $("next").hidden=false;
+  $("next").textContent=index===questions.length-1?"Sonuçları gör →":"Sonraki soru →";
+}
+
+function nextQuestion(){
+  if(!locked)return;
+  index++;
+  renderQuestion();
+}
+
+function skipQuestion(){
+  if(locked)return;
+  skippedCount++;
+  reviewItems.push({...questions[index],reason:"Atlandı"});
+  index++;
+  renderQuestion();
+}
+
+function finishGame(){
+  if(!questions.length)return;
+  showResults();
+}
+
+function showResults(){
+  if(timer){
+    clearInterval(timer);
+    timer=null;
+  }
+  $("game").hidden=true;
+  $("result").hidden=false;
+  $("progress").value=questions.length;
+
+  const percentage=questions.length
+    ?Math.round(correctCount/questions.length*100):0;
+
+  $("final-score").textContent=`${score} / ${questions.length*10}`;
+  $("accuracy").textContent=percentage+"%";
+  $("final-time").textContent=formatTime(seconds);
+  $("result-comment").textContent=
+    percentage>=90?"Mükemmel! Etimolojik kanıtları ve tarihsel katmanları dikkatle değerlendirdin.":
+    percentage>=70?"İyi sonuç. Yanlış cevapların açıklamalarını tekrar ederek bilgini güçlendirebilirsin.":
+    "Yanlış ve atlanan soruları incele; özellikle ses denklikleri, tarihsel tanıklıklar ve kaynak değerlendirmesine odaklan.";
+
+  $("result-detail").textContent=
+    `${questions.length} sorudan ${correctCount} doğru, ${questions.length-correctCount-skippedCount} yanlış ve ${skippedCount} atlanan soru.`;
+
+  const review=$("review");
+  review.replaceChildren();
+  if(reviewItems.length){
+    const details=document.createElement("details");
+    details.open=true;
+    addText(details,"summary",`Tekrar edilmesi önerilen sorular (${reviewItems.length})`);
+    const list=document.createElement("ol");
+    reviewItems.forEach(item=>{
+      const li=document.createElement("li");
+      addText(li,"strong",`${item.word||item.layer} — ${item.reason}`);
+      addText(li,"p",item.question);
+      addText(li,"p",`Doğru yanıt: ${item.options[item.answer]}`);
+      addText(li,"p",item.explanation);
+      list.appendChild(li);
+    });
+    details.appendChild(list);
+    review.appendChild(details);
+  }else{
+    addText(review,"p","Tebrikler! Tekrar edilmesi gereken soru bulunmuyor.");
+  }
+}
+
+function returnHome(){
+  if(timer){
+    clearInterval(timer);
+    timer=null;
+  }
+  $("result").hidden=true;
+  $("game").hidden=true;
+  $("welcome").hidden=false;
+  updateQuestionCount();
+}
+
+$("start").addEventListener("click",startGame);
+$("next").addEventListener("click",nextQuestion);
+$("skip").addEventListener("click",skipQuestion);
+$("finish").addEventListener("click",finishGame);
+$("retry").addEventListener("click",startGame);
+$("home").addEventListener("click",returnHome);
+$("category").addEventListener("change",updateQuestionCount);
+$("count").addEventListener("change",updateQuestionCount);
+
+fillCategories();
+</script>
+</body>
 </html>
